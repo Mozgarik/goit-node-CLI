@@ -7,13 +7,9 @@ program
   .option('-n, --name <type>', 'user name')
   .option('-e, --email <type>', 'user email')
   .option('-p, --phone <type>', 'user phone');
-
-
   program.parse(process.argv);
 
   const options = program.opts();
-
-console.log(options)
 
 async function invokeAction({ action, id, name, email, phone }) {
     switch (action) {
@@ -22,14 +18,17 @@ async function invokeAction({ action, id, name, email, phone }) {
         return contactList;
       case 'get':
         const contact = await contacts.getContactById(id);
-        return contact;
+        if (contact) {
+          return contact
+        }else {
+          return null
+        }
       case 'add':
-        const newContact = await contacts.addContact({name, email, phone});
+        const newContact = await contacts.addContact({ name, email, phone});
         return newContact;
       case 'remove':
         const removeContact = await contacts.removeContact(id)
         return removeContact
-        
       default:
         console.warn('\x1B[31m Unknown action type!');
     }
